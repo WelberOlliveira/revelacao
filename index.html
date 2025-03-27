@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Presente Especial</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #34b0d8, #eea0a6);
+      font-family: 'Dancing Script', cursive;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .firework-bg {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .gift-container {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      perspective: 1000px;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .gift-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s ease;
+    }
+
+    .gift-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .gift-front,
+    .gift-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .gift-front {
+      background: #e31837;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffd700;
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .gift-back {
+      background: url('alice.jpeg') no-repeat center center;
+      background-size: cover;
+      transform: rotateY(180deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .click-message {
+      position: relative;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: firework 1.8s ease-out forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes firework {
+      0% {
+        transform: scale(0.5) translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      70% {
+        transform: scale(1.5) translateY(-80px) rotate(180deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0) translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .alice-spark {
+      position: absolute;
+      font-size: 1.2em;
+      color: rgba(255, 192, 203, 0.8);
+      animation: sparkle 2s linear;
+      pointer-events: none;
+      font-weight: bold;
+    }
+
+    @keyframes sparkle {
+      0% { opacity: 0; transform: scale(0.8) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.2) rotate(15deg); }
+      100% { opacity: 0; transform: scale(0.8) rotate(-15deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="firework-bg" id="fireworkBg"></div>
+
+  <div class="gift-container">
+    <div class="gift-card" id="giftCard">
+      <div class="gift-front">
+        <div class="click-message">Clique aqui</div>
+      </div>
+      <div class="gift-back" id="giftBack"></div>
+    </div>
+  </div>
+
+  <script>
+    const card = document.getElementById('giftCard');
+    const giftBack = document.getElementById('giftBack');
+    const bg = document.getElementById('fireworkBg');
+    let flipped = false;
+
+    document.querySelector('.gift-container').addEventListener('click', function () {
+      flipped = !flipped;
+      card.classList.toggle('flipped');
+
+      if (flipped) {
+        // Espalha nomes "Alice" continuamente
+        setInterval(() => {
+          const alice = document.createElement('span');
+          alice.className = 'alice-spark';
+          alice.innerText = 'Alice';
+          alice.style.top = Math.random() * 100 + '%';
+          alice.style.left = Math.random() * 100 + '%';
+          alice.style.fontSize = (Math.random() * 2.5 + 0.8) + 'em';
+          giftBack.appendChild(alice);
+        }, 1000);
+      }
+    });
+
+    // Fogos de artifício contínuos no fundo
+    setInterval(() => {
+      const firework = document.createElement('div');
+      firework.className = 'confetti';
+      firework.style.left = Math.random() * 100 + 'vw';
+      firework.style.top = Math.random() * 100 + 'vh';
+      firework.style.backgroundColor = ['#ffb6c1', '#87cefa', '#ffc0cb', '#dda0dd'][Math.floor(Math.random() * 4)];
+      bg.appendChild(firework);
+      setTimeout(() => firework.remove(), 2000);
+    }, 150);
+  </script>
+</body>
+</html>
